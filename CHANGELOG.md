@@ -42,7 +42,9 @@ All notable changes to `bosun`. Format follows
   HTTP/2 transport, on every call the gate, the agent and the MCP server make,
   and `html/template`, which renders the pipeline page. All are fixed in
   1.26.9. `go.mod`'s `go` line is what CI's `setup-go` reads, so that line is
-  the change.
+  the change. With the toolchain fixed, four more surface in
+  `golang.org/x/net`'s HTTP/2 code, reached the same way and fixed in v0.60.0;
+  `x/crypto` and `x/text` move with it, as `go get` requires.
 
 - **No subprocess is handed a credential this process loaded.** `cmd.Env` was
   nil at every `exec.Command` in the shipped code but five, and a nil `Env`
