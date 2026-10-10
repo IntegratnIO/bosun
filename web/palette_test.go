@@ -21,8 +21,7 @@ var hex = regexp.MustCompile(`#[0-9a-fA-F]{6}`)
 // This is the check that stops it. It reads the page's own :root blocks and
 // asserts every value appears in site/src/styles/theme.css, which is where the
 // palette is decided and whose header says where those colours came from: the
-// badge navy, the two sea tones, the coral of the tentacles, the cream of the
-// cap.
+// Integratn design system.
 //
 // If this fails, the fix is to use the site's token, or to add one to the site
 // first and take it from there. It is not to add an exception here.
