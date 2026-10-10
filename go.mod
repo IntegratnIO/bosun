@@ -1,6 +1,6 @@
 module github.com/JamesAtIntegratnIO/bosun
 
-go 1.26.6
+go 1.26.9
 
 require (
 	github.com/Masterminds/sprig/v3 v3.3.0
