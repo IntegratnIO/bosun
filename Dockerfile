@@ -9,7 +9,7 @@
 # with nothing in the repository to show for it -- the same "the image changed
 # underneath you" failure charts/bosun's image helper exists to prevent for the
 # image this file produces.
-FROM golang:1.26-alpine@sha256:28d89ee9cc0ff9fec75c82ca201e6bf7fdf9a679d4b7b24dfa04f2bb766bb468 AS build
+FROM golang:1.26-alpine@sha256:3082400e369fa24d5fc60bca20edab3f6d604e0c5a690ec66b295eff4dd87ade AS build
 WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
