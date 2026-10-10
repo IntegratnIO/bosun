@@ -13,15 +13,14 @@ package web
 // the bump wrote.
 //
 // THE PALETTE IS THE SITE'S, and it is not restated from taste. Every value
-// below maps to a token in site/src/styles/theme.css, whose own header says
-// those colours come from the mark: the badge navy, the two sea tones, the
-// coral of the tentacles, the cream of the cap. There is one Bosun palette and
-// bosun.integratn.io is where it is decided; this page is a consumer of it. If
-// a colour here has no counterpart there, it is a bug rather than a variation.
+// below maps to a token in site/src/styles/theme.css, which holds the
+// Integratn design system's tokens, the ones integratn.io and Specmarshal
+// share. There is one palette and the site is where this repository takes it
+// from; this page is a consumer of it. If a colour here has no counterpart
+// there, it is a bug rather than a variation.
 //
 // Dark is the base and light is the override, which is the site's structure
-// and for the site's stated reason -- the badge is navy, and you read this
-// next to a terminal.
+// and for the site's reason: you read this next to a terminal.
 //
 // WHICH TREATMENT IS THREE-STATE, and the shape below is what makes all three
 // reachable. Left alone the page follows the reader's system preference. The
@@ -34,10 +33,9 @@ package web
 // leave `data-theme="light"` half-applied on a dark system, which renders as
 // dark text on dark ground rather than as an error.
 //
-// The fonts are named and not fetched. Inter, Space Grotesk and JetBrains Mono
-// are what the site loads; a reader who has them gets them, and everyone else
-// gets the system stack behind them. Loading them would mean an external asset
-// on a page whose whole publishing story is that it has none.
+// The fonts are the platform's own sans and mono, as on the site, so nothing
+// is fetched: an external asset would break a page whose whole publishing
+// story is that it has none.
 const pageHTML = `<!doctype html>
 <html lang="en"{{with .Theme}} data-theme="{{.}}"{{end}}>
 <head>
@@ -49,70 +47,71 @@ const pageHTML = `<!doctype html>
 <style>
 /* Dark, and the base rather than a media query -- see the note above the
    template. Names on the left are this page's; names in the comments are the
-   site's tokens they come from. */
+   site's tokens they come from: the Integratn design system's, which the docs
+   site and integratn.io share. */
 :root {
-  --bg: #0a1622;            /* --bo-navy-900 */
-  --card: #122435;          /* --bo-surface-solid */
-  --fg: #c6d4e0;            /* --sl-color-text */
-  --strong: #f2f6f9;        /* --sl-color-white */
-  --muted: #8296ab;         /* --sl-color-gray-3 */
-  --line: #1d3346;          /* --sl-color-gray-6 */
-  --link: #94d8db;          /* --bo-teal-300, the site's text-accent */
-  --ok: #8fe0ab;            /* --sl-color-green-high */
-  --ok-bg: #0f2f24;         /* --sl-color-green-low */
-  --blocking: #f2a48e;      /* --bo-coral-300 */
-  --blocking-bg: #3a1a15;   /* --sl-color-red-low */
-  --degraded: #f0cf9a;      /* --sl-color-orange-high */
-  --degraded-bg: #33260f;   /* --sl-color-orange-low */
-  --neutral: #8296ab;
-  --neutral-bg: #16283a;    /* --sl-color-gray-7 */
-  --code-bg: #0c1a27;       /* --bo-code-bg */
-  --radius: 10px;           /* --bo-radius */
-  --font: "Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Space Grotesk Variable", "Space Grotesk", var(--font);
-  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --bg: #0a0c10;            /* --ground */
+  --card: #1d2126;          /* --panel */
+  --fg: #cfd5dc;            /* --said */
+  --strong: #f3f7fc;        /* --text */
+  --muted: #acb2b9;         /* --dim */
+  --line: #393e43;          /* --border */
+  --link: #f3f7fc;          /* --accent */
+  --ok: #42c161;            /* --ok */
+  --ok-bg: #0c2b13;         /* --ok-surface */
+  --blocking: #f47983;      /* --bad */
+  --blocking-bg: #39191b;   /* --bad-surface */
+  --degraded: #cf9a43;      /* --warn */
+  --degraded-bg: #2f210c;   /* --warn-surface */
+  --neutral: #acb2b9;       /* --dim */
+  --neutral-bg: #262a30;    /* --accent-surface */
+  --code-bg: #14171d;       /* --well */
+  --radius: 6px;            /* --radius */
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: var(--font);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
-/* Light: the site's paper-and-cream treatment, not an inversion of the above. */
+/* Light: the design system's light surface, not an inversion of the above. */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme='dark']) {
-    --bg: #fbf7ee;          /* --bo-paper */
-    --card: #ffffff;        /* --bo-surface-solid */
-    --fg: #2c4258;          /* --sl-color-text */
-    --strong: #14293e;      /* --bo-navy-700 */
-    --muted: #5b7690;       /* --sl-color-gray-3 */
-    --line: #e3e0d4;        /* --sl-color-gray-6 */
-    --link: #1b5c6d;        /* --bo-teal-700, the site's text-accent */
-    --ok: #1c5840;          /* --sl-color-green-high */
-    --ok-bg: #d6eee1;       /* --sl-color-green-low */
-    --blocking: #7a2a20;    /* --bo-coral-700 */
-    --blocking-bg: #f8dfd8; /* --sl-color-red-low */
-    --degraded: #7a5219;    /* --sl-color-orange-high */
-    --degraded-bg: #f6e9d1; /* --sl-color-orange-low */
-    --neutral: #5b7690;
-    --neutral-bg: #efeade;  /* --sl-color-gray-7 */
-    --code-bg: #f3eee0;     /* --bo-code-bg */
+    --bg: #dee2e7;          /* --ground */
+    --card: #e8ebf1;        /* --panel */
+    --fg: #262a30;          /* --said */
+    --strong: #0a0c10;      /* --text */
+    --muted: #393e43;       /* --dim */
+    --line: #acb2b9;        /* --border */
+    --link: #0a0c10;        /* --accent */
+    --ok: #006c24;          /* --ok */
+    --ok-bg: #eafaec;       /* --ok-surface */
+    --blocking: #8f3640;    /* --bad */
+    --blocking-bg: #ffefef; /* --bad-surface */
+    --degraded: #764f00;    /* --warn */
+    --degraded-bg: #fff3e3; /* --warn-surface */
+    --neutral: #393e43;     /* --dim */
+    --neutral-bg: #f3f7fc;  /* --accent-surface */
+    --code-bg: #dee2e7;     /* --well */
   }
 }
 /* And again for an explicit light, which must beat a dark system preference.
    Byte-identical to the block above by construction; TestLightBlocksAgree fails
    if they ever stop agreeing. */
 :root[data-theme='light'] {
-  --bg: #fbf7ee;          /* --bo-paper */
-  --card: #ffffff;        /* --bo-surface-solid */
-  --fg: #2c4258;          /* --sl-color-text */
-  --strong: #14293e;      /* --bo-navy-700 */
-  --muted: #5b7690;       /* --sl-color-gray-3 */
-  --line: #e3e0d4;        /* --sl-color-gray-6 */
-  --link: #1b5c6d;        /* --bo-teal-700, the site's text-accent */
-  --ok: #1c5840;          /* --sl-color-green-high */
-  --ok-bg: #d6eee1;       /* --sl-color-green-low */
-  --blocking: #7a2a20;    /* --bo-coral-700 */
-  --blocking-bg: #f8dfd8; /* --sl-color-red-low */
-  --degraded: #7a5219;    /* --sl-color-orange-high */
-  --degraded-bg: #f6e9d1; /* --sl-color-orange-low */
-  --neutral: #5b7690;
-  --neutral-bg: #efeade;  /* --sl-color-gray-7 */
-  --code-bg: #f3eee0;     /* --bo-code-bg */
+  --bg: #dee2e7;          /* --ground */
+  --card: #e8ebf1;        /* --panel */
+  --fg: #262a30;          /* --said */
+  --strong: #0a0c10;      /* --text */
+  --muted: #393e43;       /* --dim */
+  --line: #acb2b9;        /* --border */
+  --link: #0a0c10;        /* --accent */
+  --ok: #006c24;          /* --ok */
+  --ok-bg: #eafaec;       /* --ok-surface */
+  --blocking: #8f3640;    /* --bad */
+  --blocking-bg: #ffefef; /* --bad-surface */
+  --degraded: #764f00;    /* --warn */
+  --degraded-bg: #fff3e3; /* --warn-surface */
+  --neutral: #393e43;     /* --dim */
+  --neutral-bg: #f3f7fc;  /* --accent-surface */
+  --code-bg: #dee2e7;     /* --well */
 }
 * { box-sizing: border-box; }
 body {
