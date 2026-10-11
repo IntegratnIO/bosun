@@ -22,7 +22,7 @@
  *   { tool: 'plausible', domain: 'bosun.integratn.io' }
  *   { tool: 'goatcounter', endpoint: 'https://NAME.goatcounter.com/count' }
  */
-export const ANALYTICS = null
+export const ANALYTICS = { tool: 'umami', src: '/c.js', websiteId: 'a4dc99d0-79d0-46df-97d1-67a6b64a9935' }
 
 /** The hosts whose visits count. Anything else loads nothing. */
 export const ANALYTICS_HOSTS = ['bosun.integratn.io']
