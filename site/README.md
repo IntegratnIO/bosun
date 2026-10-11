@@ -25,6 +25,7 @@ edits something the next build deletes.
 | The title bar's line back to integratn.io | `src/components/SiteTitle.astro` |
 | The landing page's layout | `src/authored/index.mdx`, `src/components/Hero.astro`, `src/components/LoopDiagram.astro`, `src/styles/landing.css` |
 | The link-preview card | `scripts/og.mjs`, then `npm run og` (output is committed) |
+| Analytics (off until a tool is chosen) and the events it sends | `analytics.mjs`: the same switch and event names as integratn.io |
 
 ## Working on it
 
