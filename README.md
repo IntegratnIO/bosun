@@ -174,7 +174,7 @@ for why the values path writes a plan instead.
 each ending in a state you can verify. The short version:
 
 ```bash
-helm install bosun oci://ghcr.io/jamesatintegratnio/charts/bosun \
+helm install bosun oci://ghcr.io/integratnio/charts/bosun \
   --namespace bosun --create-namespace \
   -f my-values.yaml
 ```
@@ -197,14 +197,14 @@ A signature nobody checks is a build step, so here is the command:
 # the images
 cosign verify \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  --certificate-identity-regexp '^https://github\.com/JamesAtIntegratnIO/bosun/\.github/workflows/image\.yaml@' \
-  ghcr.io/jamesatintegratnio/gitops-gate:main
+  --certificate-identity-regexp '^https://github\.com/IntegratnIO/bosun/\.github/workflows/image\.yaml@' \
+  ghcr.io/integratnio/bosun:main
 
 # the charts
 cosign verify \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  --certificate-identity-regexp '^https://github\.com/JamesAtIntegratnIO/bosun/\.github/workflows/chart\.yaml@' \
-  ghcr.io/jamesatintegratnio/charts/bosun:0.23.2
+  --certificate-identity-regexp '^https://github\.com/IntegratnIO/bosun/\.github/workflows/chart\.yaml@' \
+  ghcr.io/integratnio/charts/bosun:0.39.0
 ```
 
 The identity is a pattern rather than a literal because the ref is part of it:

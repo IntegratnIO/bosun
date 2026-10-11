@@ -53,7 +53,7 @@ fi
 # assumption about anyone's environment; flagging those made the old check
 # fail on facts rather than on faults.
 owner_in_charts() {
-  grep -rniE 'jamesatintegratnio' charts/ 2>/dev/null \
+  grep -rniE 'integratnio' charts/ 2>/dev/null \
     | grep -vE '/Chart\.yaml:' \
     | grep -vE '/(README|CHANGELOG)\.md:'
 }

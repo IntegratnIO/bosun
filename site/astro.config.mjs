@@ -25,10 +25,10 @@ export default defineConfig({
         './src/styles/landing.css',
       ],
       social: [
-        { icon: 'github', label: 'GitHub', href: 'https://github.com/JamesAtIntegratnIO/bosun' },
+        { icon: 'github', label: 'GitHub', href: 'https://github.com/IntegratnIO/bosun' },
       ],
       editLink: {
-        baseUrl: 'https://github.com/JamesAtIntegratnIO/bosun/edit/main/',
+        baseUrl: 'https://github.com/IntegratnIO/bosun/edit/main/',
       },
       lastUpdated: false,
       credits: false,
@@ -102,7 +102,7 @@ export default defineConfig({
             { label: 'Licence and use', slug: 'project/licence' },
             {
               label: 'Changelog',
-              link: 'https://github.com/JamesAtIntegratnIO/bosun/blob/main/CHANGELOG.md',
+              link: 'https://github.com/IntegratnIO/bosun/blob/main/CHANGELOG.md',
               attrs: { target: '_blank' },
             },
           ],

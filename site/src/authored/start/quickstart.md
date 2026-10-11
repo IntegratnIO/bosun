@@ -44,7 +44,7 @@ tests the last published version is testing the past.
 ### Bring it up
 
 ```bash
-git clone https://github.com/JamesAtIntegratnIO/bosun.git
+git clone https://github.com/IntegratnIO/bosun.git
 cd bosun/local
 export LLM_BASE_URL=http://<your-host>:1234/v1
 make up
@@ -72,7 +72,7 @@ refusing a host).
 
 :::note[The recorded incidents are scored, not replayed]
 Every case in
-[`evals/`](https://github.com/JamesAtIntegratnIO/bosun/tree/main/evals) is a
+[`evals/`](https://github.com/IntegratnIO/bosun/tree/main/evals) is a
 real incident that happened to the platform this was built for. They are scored
 by `go test ./evals/...`; the proving ground renders its own sample repository,
 so there is nowhere to put a recorded verdict.
@@ -175,7 +175,7 @@ networkPolicy:
 ```
 
 ```bash
-helm install bosun oci://ghcr.io/jamesatintegratnio/charts/bosun \
+helm install bosun oci://ghcr.io/integratnio/charts/bosun \
   --namespace bosun --create-namespace \
   -f my-values.yaml
 ```

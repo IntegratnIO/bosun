@@ -61,7 +61,7 @@ keep fresh, and no paths filter to hand-edit.
 ## 2. Install the agent
 
 ```bash
-helm install bosun oci://ghcr.io/jamesatintegratnio/charts/bosun \
+helm install bosun oci://ghcr.io/integratnio/charts/bosun \
   --namespace bosun --create-namespace \
   -f my-values.yaml
 ```

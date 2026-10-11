@@ -137,7 +137,7 @@ jobs:
             # Only charts this pull request touches.
             git diff --quiet "$base" -- "$chart" && continue
 
-            if helm show chart "oci://ghcr.io/jamesatintegratnio/charts/${name}"                  --version "$version" >/dev/null 2>&1; then
+            if helm show chart "oci://ghcr.io/integratnio/charts/${name}"                  --version "$version" >/dev/null 2>&1; then
               echo "::error file=${chart}Chart.yaml::${name} ${version} is already published, and this pull request changes the chart. Bump the version, or the change will merge and publish nothing."
               fail=1
             else
