@@ -24,7 +24,7 @@ on:
 env:
   # Owner must be lowercase: OCI reference grammar rejects capitals and the
   # GitHub account is mixed case.
-  CHART_REPO: ghcr.io/jamesatintegratnio/charts
+  CHART_REPO: ghcr.io/integratnio/charts
 
 jobs:
   publish:

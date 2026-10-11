@@ -24,7 +24,7 @@ const REPO = dirname(SITE)
 const OUT = join(SITE, 'src/content/docs')
 const AUTHORED = join(SITE, 'src/authored')
 
-const GITHUB = 'https://github.com/JamesAtIntegratnIO/bosun'
+const GITHUB = 'https://github.com/IntegratnIO/bosun'
 const BRANCH = 'main'
 
 // ---------------------------------------------------------------------------

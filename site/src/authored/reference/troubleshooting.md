@@ -163,4 +163,4 @@ person's name and avatar.
 - [Configuration](/reference/configuration/): every value and what it does
 - [Onboarding](/start/onboarding/): the six steps, each with a verification
 - [The proving ground](/project/proving-ground/): reproduce it on a disposable cluster
-- [Open an issue](https://github.com/JamesAtIntegratnIO/bosun/issues)
+- [Open an issue](https://github.com/IntegratnIO/bosun/issues)

@@ -18,7 +18,7 @@ const SITE = dirname(dirname(fileURLToPath(import.meta.url)))
 const REPO = dirname(SITE)
 const DIST = join(SITE, 'dist')
 
-const GITHUB_PREFIX = 'https://github.com/JamesAtIntegratnIO/bosun/'
+const GITHUB_PREFIX = 'https://github.com/IntegratnIO/bosun/'
 
 if (!existsSync(DIST)) {
   console.error('check-links: no dist/, run `npm run build` first')

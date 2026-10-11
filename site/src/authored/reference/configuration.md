@@ -9,7 +9,7 @@ when you install, and the env vars when you read a pod spec at three in the
 morning.
 
 The machine-checkable version of this page is
-[`charts/bosun/values.schema.json`](https://github.com/JamesAtIntegratnIO/bosun/blob/main/charts/bosun/values.schema.json),
+[`charts/bosun/values.schema.json`](https://github.com/IntegratnIO/bosun/blob/main/charts/bosun/values.schema.json),
 which `helm install` validates against before it renders anything.
 
 :::note
@@ -215,7 +215,7 @@ kubectl -n argocd get svc argocd-server -o jsonpath='{.spec.ports[*].targetPort}
 The chart writes bosun's *egress*. argocd-server's *ingress* policy lives in
 your ArgoCD release, and until both exist the connection is dropped with
 nothing logged at either end; the
-[chart README](https://github.com/JamesAtIntegratnIO/bosun/blob/main/charts/bosun/README.md)
+[chart README](https://github.com/IntegratnIO/bosun/blob/main/charts/bosun/README.md)
 carries a copy-pasteable rule for it.
 
 ### `gate.forkPRs` is off for a reason

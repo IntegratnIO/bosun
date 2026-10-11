@@ -5,7 +5,7 @@ target list, so "keep this pin current" is a few lines of values rather than a
 hand-written promotion pipeline per artifact.
 
 > **Status: shipped**, published as
-> `oci://ghcr.io/jamesatintegratnio/charts/kargo-pipelines` and running the
+> `oci://ghcr.io/integratnio/charts/kargo-pipelines` and running the
 > promotion pipelines on the platform this was generalized from.
 
 ## What it adds over hand-written Stages

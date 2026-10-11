@@ -70,7 +70,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         with:
-          images: ${{ env.REGISTRY }}/jamesatintegratnio/bosun
+          images: ${{ env.REGISTRY }}/integratnio/bosun
           # No 'latest'. An unpinned tag is how an image silently changes
           # underneath a cluster, which is the incident class this service
           # exists to prevent; shipping one here would be embarrassing.
@@ -121,7 +121,7 @@ jobs:
       # runner has no way to answer.
       - name: Sign the digest
         env:
-          IMAGE: ${{ env.REGISTRY }}/jamesatintegratnio/bosun
+          IMAGE: ${{ env.REGISTRY }}/integratnio/bosun
           DIGEST: ${{ steps.build.outputs.digest }}
         run: |
           set -euo pipefail

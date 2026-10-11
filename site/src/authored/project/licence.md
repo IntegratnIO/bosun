@@ -4,7 +4,7 @@ description: PolyForm Internal Use 1.0.0. What you may do without asking, what n
 ---
 
 Bosun is licensed under
-[PolyForm Internal Use 1.0.0](https://github.com/JamesAtIntegratnIO/bosun/blob/main/LICENSE).
+[PolyForm Internal Use 1.0.0](https://github.com/IntegratnIO/bosun/blob/main/LICENSE).
 
 This page is a plain-language summary. The licence text is the authority; where
 they disagree, the licence wins.
@@ -63,5 +63,5 @@ to prove before it lands.
 ## Asking
 
 Open an issue on
-[the repository](https://github.com/JamesAtIntegratnIO/bosun/issues), or get in
+[the repository](https://github.com/IntegratnIO/bosun/issues), or get in
 touch directly. Distribution licences are granted; they have to be asked for.
