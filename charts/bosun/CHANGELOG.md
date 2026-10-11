@@ -11,6 +11,23 @@ with no artifact behind it; 0.6.0 was never tagged at all. Entries marked
 **never published** were bumped on a branch and bumped again before merging,
 so the version after them is what shipped.
 
+## [0.39.1]
+
+**The first release from IntegratnIO.** Nothing in the chart's output
+changes: an install that sets nothing renders what 0.39.0 rendered, apart
+from the version labels.
+
+### Changed
+
+- The repository moved to [IntegratnIO/bosun](https://github.com/IntegratnIO/bosun),
+  and the image and charts now publish to `ghcr.io/integratnio`
+  (`ghcr.io/integratnio/bosun`, `oci://ghcr.io/integratnio/charts/bosun`).
+  ghcr packages do not follow a repository transfer, so 0.39.0 and earlier stay
+  at `ghcr.io/jamesatintegratnio`; this release exists so the new path has an
+  image at the chart's appVersion. Verify signatures against
+  `github.com/IntegratnIO/bosun` from here on.
+- The image is built with Go 1.26.9 (#150), matching `go.mod`.
+
 ## [0.39.0]
 
 **One new value, off by default.** An install that sets nothing renders the
