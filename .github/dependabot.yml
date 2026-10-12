@@ -49,7 +49,7 @@ updates:
       interval: weekly
 
   # The documentation site, which is built by ci.yaml on every pull request and
-  # published by pages.yaml. `npm ci` means the lockfile is the pin, so this is
+  # published by Cloudflare Pages. `npm ci` means the lockfile is the pin, so this is
   # the only thing that moves it.
   - package-ecosystem: npm
     directory: /site

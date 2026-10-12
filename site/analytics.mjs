@@ -11,8 +11,7 @@
 // functions/api/c.js pass it through to Umami on the homelab, so the value to
 // set is { tool: 'umami', src: '/c', websiteId: '<id from Umami>' }. The src is
 // /c, not /c.js: a Pages Function's route is its file name without the
-// extension, so /c.js falls through to the static site. On GitHub Pages there
-// are no Functions at all, and both /c and /api/c are 404.
+// extension, so /c.js falls through to the static site.
 //
 // What is counted beyond page views:
 //   click     a landing-page button (.bo-btn), or anything marked data-track

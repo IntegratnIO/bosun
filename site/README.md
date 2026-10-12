@@ -1,8 +1,8 @@
 # The documentation site
 
 [bosun.integratn.io](https://bosun.integratn.io), built with Astro and
-Starlight and deployed to GitHub Pages by
-[`.github/workflows/pages.yaml`](../.github/workflows/pages.yaml).
+Starlight and served from Cloudflare Pages (the `bosun-docs` project, defined in
+IntegratnIO/infrastructure `sites/`).
 
 ## The one thing to understand
 
@@ -76,10 +76,13 @@ would try to evaluate.
 
 ## Deploying
 
-Pushes to `main` that touch `site/` or any published markdown trigger
-`pages.yaml`. The paths filter there has to stay in step with the `PAGES` map:
-a doc that is published but not listed is a doc whose fix reaches GitHub and
-never reaches the site.
+Cloudflare Pages builds `site/` from this repository on every push to `main`,
+and a preview for every pull request, when the push touches `site/` or any
+published markdown. That path list is `path_includes` for `bosun-docs` in
+IntegratnIO/infrastructure `sites/main.tf`, and it has to stay in step with the
+`PAGES` map: a doc that is published but not listed is a doc whose fix reaches
+GitHub and never reaches the site.
 
-The custom domain is `public/CNAME`. Changing it means changing `site:` in
-`astro.config.mjs` and the URL in `scripts/og.mjs` too.
+The custom domain is set on the Pages project in the same file. Changing it
+means changing `site:` in `astro.config.mjs` and the URL in `scripts/og.mjs`
+too.
