@@ -13,8 +13,8 @@
     "check:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.36.0",
-    "astro": "^5.14.0",
-    "sharp": "^0.34.4"
+    "@astrojs/starlight": "^0.42.6",
+    "astro": "^7.3.8",
+    "sharp": "^0.35.5"
   }
 }
