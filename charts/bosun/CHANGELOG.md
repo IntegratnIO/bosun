@@ -11,6 +11,19 @@ with no artifact behind it; 0.6.0 was never tagged at all. Entries marked
 **never published** were bumped on a branch and bumped again before merging,
 so the version after them is what shipped.
 
+## [0.39.2]
+
+**Prose only.** No values change, no template change, and `appVersion` does not
+move: the chart deploys the same image 0.39.1 does.
+
+### Changed
+
+- **0.34.2 has the entry it shipped without.** That version published a chart
+  README change and left this file untouched, so the history jumped 0.34.1 to
+  0.35.0 and an operator diffing the two versions found a changed README with
+  nothing describing it. The entry is backfilled in its chronological place and
+  says it was recorded after the fact.
+
 ## [0.39.1]
 
 **The first release from IntegratnIO.** Nothing in the chart's output
@@ -196,6 +209,32 @@ unaffected in every respect.
 
   The disclosure notes gain their entry: what this tool reveals is what
   `gate_verdict` reveals, about the pull requests the agent gave up on.
+
+## [0.34.2]
+
+**Prose only.** No values change, no template change, and `appVersion` does not
+move: the chart deploys the same image 0.34.0 does.
+
+Recorded after the fact. [#133](https://github.com/IntegratnIO/bosun/pull/133)
+carried the bump and the README edit together and left this entry out, so the
+version published with nothing here to describe it.
+
+### Changed
+
+- **The MCP surface's disclosure note becomes one entry per tool.** The list a
+  reader weighs before publishing the port had been a flat sentence running
+  from the repository's name to "the findings and their remedies". Phase 2 was
+  about to add three more tools, each of which would have edited that one
+  sentence, so the note now gives `pipeline_report`, `gate_status`,
+  `gate_verdict` and `triage_status` a line each, and a new tool appends a line
+  instead of forcing a rewrite. Same facts as the sentence it replaced,
+  assigned to the tool that serves them, which is what
+  [#125](https://github.com/IntegratnIO/bosun/issues/125) asked for. 0.37.1 is
+  where those lines stopped being coarser than the results they describe.
+- **The link to the MCP surface page stops counting the tools.** "The four
+  tools, the token, and the trust model" became "the tools, the token, and the
+  trust model", because a count in prose goes stale the next time somebody adds
+  one.
 
 ## [0.34.1]
 
