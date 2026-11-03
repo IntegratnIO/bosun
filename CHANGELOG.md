@@ -37,6 +37,21 @@ All notable changes to `bosun`. Format follows
 
 ### Security
 
+- **Built with Go 1.26.10.** govulncheck in CI fails on
+  [GO-2026-6809](https://pkg.go.dev/vuln/GO-2026-6809), which distrusts
+  compromised intermediate certificates in `crypto/x509`, reached through
+  `gate.DiffResult.Report`. The advisory was published after main's last CI
+  run, and govulncheck reads the vulnerability database when it runs, so main
+  stayed green while every pull request opened since went red on a toolchain
+  neither it nor main had touched. 1.26.10 carries the fix, and `go.mod`'s `go`
+  line is what CI's `setup-go` reads, so that line is the change.
+
+  The Dockerfile's `golang:1.26-alpine` digest moves with it, to the index that
+  carries 1.26.10 across the same eight platforms the old one did. A digest
+  lagging `go.mod` is what #150 existed to fix: `go mod download` refuses to
+  build at all, with "go.mod requires go >= 1.26.10 (running go 1.26.9;
+  GOTOOLCHAIN=local)".
+
 - **Built with Go 1.26.9.** govulncheck in CI reports twelve standard-library
   vulnerabilities in Go 1.26.6 that this code reaches: `net/http` and its
   HTTP/2 transport, on every call the gate, the agent and the MCP server make,
