@@ -56,7 +56,7 @@ func TestRenderChartVersionRefusesValueFilesOutsideTheCheckout(t *testing.T) {
 		App: "thing", Chart: "thing", ChartRepo: "https://charts.example.com",
 		Version: "1.0.0", ValueFiles: []string{"../../../../etc/passwd.yaml"},
 	}
-	_, err := renderChartVersion(context.Background(), root, r)
+	_, err := renderChartVersion(context.Background(), nil, root, r)
 	wantRefused(t, err, safepath.ErrEscapes)
 }
 
@@ -67,7 +67,7 @@ func TestRenderChartVersionRefusesValueFilesThroughASymlink(t *testing.T) {
 		App: "thing", Chart: "thing", ChartRepo: "https://charts.example.com",
 		Version: "1.0.0", ValueFiles: []string{"values.yaml"},
 	}
-	_, err := renderChartVersion(context.Background(), root, r)
+	_, err := renderChartVersion(context.Background(), nil, root, r)
 	wantRefused(t, err, safepath.ErrSymlink)
 }
 
@@ -79,7 +79,7 @@ func TestRenderChartVersionContainsAfterStrippingTheValuesRef(t *testing.T) {
 		App: "thing", Chart: "thing", ChartRepo: "https://charts.example.com",
 		Version: "1.0.0", ValueFiles: []string{"$values/../../../../etc/passwd.yaml"},
 	}
-	_, err := renderChartVersion(context.Background(), root, r)
+	_, err := renderChartVersion(context.Background(), nil, root, r)
 	wantRefused(t, err, safepath.ErrEscapes)
 }
 

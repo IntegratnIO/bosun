@@ -22,6 +22,16 @@ type Cluster struct {
 // changes the gate cannot see.
 type Inventory struct {
 	Clusters []Cluster `json:"clusters"`
+
+	// Capabilities is what each cluster serves, keyed by both its name and
+	// its server URL, for `helm template --kube-version/--api-versions`.
+	//
+	// Beside the clusters rather than on them: Cluster is what generators and
+	// templates see, and an ApplicationSet template that could read the
+	// API-version list would be a new input nobody reviews. Kept separately
+	// too because it covers the implicit local cluster, which ArgoCD lists
+	// and Clusters deliberately does not.
+	Capabilities map[string]Capabilities `json:"capabilities,omitempty"`
 }
 
 // Validate checks that the inventory can answer the questions the selectors
