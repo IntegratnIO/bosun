@@ -71,10 +71,10 @@ func TestRenderChartVersionPassesTheClustersCapabilities(t *testing.T) {
 	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
 
 	cfg := &Config{Capabilities: map[string]Capabilities{
-		"the-cluster": {KubeVersion: "1.36", APIVersions: []string{"policy/v1/PodDisruptionBudget"}},
+		"hub": {KubeVersion: "1.36", APIVersions: []string{"policy/v1/PodDisruptionBudget"}},
 	}}
 	_, err := renderChartVersion(context.Background(), cfg, t.TempDir(), Row{
-		App: "kyverno", Cluster: "the-cluster", Chart: "kyverno",
+		App: "kyverno", Cluster: "hub", Chart: "kyverno",
 		ChartRepo: "https://kyverno.github.io/kyverno", Version: "3.9.2",
 	})
 	if err != nil {

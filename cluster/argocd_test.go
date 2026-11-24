@@ -199,7 +199,7 @@ func TestArgoCDReadsEachClustersCapabilities(t *testing.T) {
 	argo := argoFor(t, http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, clusterList(
 			map[string]any{
-				"name": "the-cluster", "server": "https://10.0.4.100:6443",
+				"name": "hub", "server": "https://hub.example:6443",
 				"labels": map[string]string{"env": "prod"},
 				"info": map[string]any{
 					"serverVersion": "1.36",
@@ -217,10 +217,10 @@ func TestArgoCDReadsEachClustersCapabilities(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := inv.Capabilities["the-cluster"]; got.KubeVersion != "1.36" || len(got.APIVersions) != 2 {
+	if got := inv.Capabilities["hub"]; got.KubeVersion != "1.36" || len(got.APIVersions) != 2 {
 		t.Fatalf("by name: %+v", got)
 	}
-	if got := inv.Capabilities["https://10.0.4.100:6443"]; got.KubeVersion != "1.36" {
+	if got := inv.Capabilities["https://hub.example:6443"]; got.KubeVersion != "1.36" {
 		t.Fatalf("by server: %+v", got)
 	}
 	if got := inv.Capabilities["in-cluster"]; got.KubeVersion != "1.35" {
