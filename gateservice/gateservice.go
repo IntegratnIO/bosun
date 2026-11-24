@@ -553,6 +553,13 @@ func (g *Service) run(ctx context.Context, pr *gitprovider.PullRequest) *Outcome
 	cfg.Egress = g.Egress
 	cfg.Log = g.Log
 	g.applyHostPolicy(cfg)
+	// What each cluster serves, from the same ArgoCD read as the inventory,
+	// so charts render the `.Capabilities` branch the cluster would. Set
+	// after the repository's config for the reason Egress is: it is not the
+	// repository's to state.
+	if inv != nil {
+		cfg.Capabilities = inv.Capabilities
+	}
 
 	// Stamped before the render rather than after it, for the reason the
 	// reading above is: what a render describes is the world as it was when

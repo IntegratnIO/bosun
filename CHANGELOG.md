@@ -111,6 +111,25 @@ All notable changes to `bosun`. Format follows
 
 ### Fixed
 
+- **Charts render against the cluster they deploy to, not helm's defaults.**
+  `helm template` was run with no `--kube-version` and no `--api-versions`, so
+  every `.Capabilities` check in a chart answered for whichever helm was in
+  the image. A chart that asks `.Capabilities.APIVersions.Has
+  "policy/v1/PodDisruptionBudget"` got "no", because helm's default set lists
+  group/versions and never kinds, and rendered its policy/v1beta1 fallback. A
+  Kyverno 3.2.8 -> 3.9.2 bump then reported a policy/v1beta1 -> policy/v1 move
+  for the admission controller's PodDisruptionBudget that no cluster serving
+  policy/v1 would ever see.
+
+  The gate now reads each cluster's `info.serverVersion` and
+  `info.apiVersions` from the same `GET /api/v1/clusters` it already reads the
+  inventory from, which is the list ArgoCD's own repo-server renders with, and
+  passes both to the chart-diff render and to the values-repair re-render. The
+  implicit local cluster is covered too, without being put back into the
+  inventory generators expand against. A cluster ArgoCD has not connected to
+  yet reports nothing and renders exactly as before. No new grant: the
+  `clusters, get` the inventory needs already serves the field.
+
 - **A merge gate that abstained because a file's inode moved.** `git fetch`
   ends by spawning `git maintenance run --auto --detach`, which daemonises and
   outlives the fetch that started it. Every checkout here is fetched into more

@@ -81,6 +81,18 @@ type argoCluster struct {
 	Server      string            `json:"server"`
 	Labels      map[string]string `json:"labels"`
 	Annotations map[string]string `json:"annotations"`
+	// Info is ArgoCD's cluster-cache summary. Only the two fields helm needs
+	// are read: the server version and the API versions ArgoCD's own
+	// repo-server renders with. Both are empty until ArgoCD has connected to
+	// the cluster at least once.
+	Info struct {
+		ServerVersion string   `json:"serverVersion"`
+		APIVersions   []string `json:"apiVersions"`
+	} `json:"info"`
+}
+
+func (c argoCluster) capabilities() gate.Capabilities {
+	return gate.Capabilities{KubeVersion: c.Info.ServerVersion, APIVersions: c.Info.APIVersions}
 }
 
 // ClusterInventory reads the inventory the gate expands generators against.
@@ -100,7 +112,21 @@ func (a *ArgoCD) ClusterInventory(ctx context.Context) (*gate.Inventory, error) 
 	}
 
 	cs := make([]gate.Cluster, 0, len(out.Items))
+	caps := map[string]gate.Capabilities{}
 	for _, item := range out.Items {
+		// Recorded before the implicit-local skip below: that cluster is left
+		// out of what generators expand against, but Applications still
+		// deploy to it, and their charts should render against what it
+		// serves.
+		if c := item.capabilities(); c.KubeVersion != "" || len(c.APIVersions) > 0 {
+			if item.Name != "" {
+				caps[item.Name] = c
+			}
+			if item.Server != "" {
+				caps[item.Server] = c
+				caps[strings.TrimRight(item.Server, "/")] = c
+			}
+		}
 		// ArgoCD synthesises the implicit local cluster into this list rather
 		// than omitting it, and it arrives with no labels, the same entry the
 		// Secret-backed reader invents when it finds no Secrets at all. It
@@ -122,7 +148,10 @@ func (a *ArgoCD) ClusterInventory(ctx context.Context) (*gate.Inventory, error) 
 
 	inv := gate.InventoryFromClusters(cs)
 	if len(inv.Clusters) == 0 {
-		return implicitLocalCluster(), nil
+		inv = implicitLocalCluster()
+	}
+	if len(caps) > 0 {
+		inv.Capabilities = caps
 	}
 	return inv, nil
 }

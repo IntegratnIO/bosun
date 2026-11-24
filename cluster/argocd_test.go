@@ -191,3 +191,47 @@ func TestArgoCDRefusesRatherThanRenderingAgainstNothing(t *testing.T) {
 		})
 	}
 }
+
+// ArgoCD's cluster info carries the server version and API versions its own
+// repo-server renders with; the gate must render with the same, including for
+// the implicit local cluster the inventory leaves out.
+func TestArgoCDReadsEachClustersCapabilities(t *testing.T) {
+	argo := argoFor(t, http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		fmt.Fprint(w, clusterList(
+			map[string]any{
+				"name": "the-cluster", "server": "https://10.0.4.100:6443",
+				"labels": map[string]string{"env": "prod"},
+				"info": map[string]any{
+					"serverVersion": "1.36",
+					"apiVersions":   []string{"policy/v1", "policy/v1/PodDisruptionBudget"},
+				},
+			},
+			map[string]any{
+				"name": "in-cluster", "server": "https://kubernetes.default.svc",
+				"info": map[string]any{"serverVersion": "1.35"},
+			},
+			map[string]any{"name": "never-connected", "server": "https://x:6443"},
+		))
+	}))
+	inv, err := argo.ClusterInventory(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := inv.Capabilities["the-cluster"]; got.KubeVersion != "1.36" || len(got.APIVersions) != 2 {
+		t.Fatalf("by name: %+v", got)
+	}
+	if got := inv.Capabilities["https://10.0.4.100:6443"]; got.KubeVersion != "1.36" {
+		t.Fatalf("by server: %+v", got)
+	}
+	if got := inv.Capabilities["in-cluster"]; got.KubeVersion != "1.35" {
+		t.Fatalf("the implicit local cluster's capabilities were dropped: %+v", got)
+	}
+	if _, ok := inv.Capabilities["never-connected"]; ok {
+		t.Fatal("a cluster ArgoCD has not connected to has nothing to record")
+	}
+	for _, c := range inv.Clusters {
+		if c.Name == "in-cluster" {
+			t.Fatal("recording capabilities must not put the implicit local cluster back in the inventory")
+		}
+	}
+}

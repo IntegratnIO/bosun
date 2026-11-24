@@ -159,6 +159,9 @@ func RendersWith(ctx context.Context, cfg *Config, workDir string, r Row, values
 	if r.Namespace != "" {
 		args = append(args, "--namespace", r.Namespace)
 	}
+	// The same capabilities the refusal was rendered with, or a repair could
+	// be judged against a template branch the gate never took.
+	args = append(args, cfg.capabilityArgs(r.Cluster)...)
 	_, err = run(ctx, workDir, "helm", args...)
 	return err
 }

@@ -69,6 +69,16 @@ type Config struct {
 	// would be the deny-list configuring itself.
 	Egress EgressPolicy `json:"-"`
 
+	// Capabilities is, per cluster, what helm is told the cluster serves when
+	// a chart is rendered for it, keyed by cluster name and by server URL.
+	//
+	// Not from the config file, for the reason Egress is not: it is a fact
+	// about the clusters, read from the ArgoCD API with the inventory, and a
+	// repository that could state its own cluster's API versions could make a
+	// chart render whichever branch it liked. Nil renders with helm's
+	// defaults.
+	Capabilities map[string]Capabilities `json:"-"`
+
 	// Log records outbound destinations. Nil keeps no record, which an
 	// operator should have to choose rather than get by omission.
 	Log func(string, ...any) `json:"-"`

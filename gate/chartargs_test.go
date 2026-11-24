@@ -121,7 +121,7 @@ func TestFlagLikeValuesAreRefusedWhereverTheyReachArgv(t *testing.T) {
 
 // The chart-diff path builds helm arguments from a Row the pull request wrote.
 func TestRenderChartVersionRefusesAFlagLikeVersion(t *testing.T) {
-	_, err := renderChartVersion(context.Background(), t.TempDir(), Row{
+	_, err := renderChartVersion(context.Background(), nil, t.TempDir(), Row{
 		App: "thing", Chart: "thing", ChartRepo: "https://charts.example.com",
 		Version: "--post-renderer=/tmp/x",
 	})

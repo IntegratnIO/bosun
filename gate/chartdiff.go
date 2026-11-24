@@ -148,8 +148,8 @@ func ChartDiff(ctx context.Context, trees Worktrees, cfg *Config, base, head *Ta
 			// whose version did not move produced two identical streams and
 			// an empty diff. It also silently mis-attributed the mixed case,
 			// a bump and a values edit in one pull request, to the bump.
-			b, errB := renderChartVersion(ctx, baseRoot, p.before)
-			a, errA := renderChartVersion(ctx, trees.Head, p.after)
+			b, errB := renderChartVersion(ctx, cfg, baseRoot, p.before)
+			a, errA := renderChartVersion(ctx, cfg, trees.Head, p.after)
 
 			// The two failures are different facts and only one of them is
 			// this change's doing, which is why they are no longer reported
@@ -417,7 +417,7 @@ type Unrenderable struct {
 // worktree and the head row's from the head one, or an Application whose
 // version did not move renders twice from one set of files and diffs to
 // nothing.
-func renderChartVersion(ctx context.Context, repoRoot string, r Row) ([]Object, error) {
+func renderChartVersion(ctx context.Context, cfg *Config, repoRoot string, r Row) ([]Object, error) {
 	chartArgs, err := HelmChartArgs(r.ChartRepo, r.Chart)
 	if err != nil {
 		return nil, err
@@ -476,6 +476,12 @@ func renderChartVersion(ctx context.Context, repoRoot string, r Row) ([]Object, 
 	// CRDs are the point of several of these diffs; a chart that starts or
 	// stops shipping one is exactly what a version bump hides.
 	args = append(args, "--include-crds")
+
+	// The cluster's own version and API list, as ArgoCD renders with. Both
+	// sides of a pair are the same Application on the same cluster, so both
+	// get the same answer, and a `.Capabilities` branch can only differ
+	// between them because the chart changed.
+	args = append(args, cfg.capabilityArgs(r.Cluster)...)
 
 	out, err := run(ctx, repoRoot, "helm", args...)
 	if err != nil {
