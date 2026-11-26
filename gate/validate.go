@@ -4,11 +4,15 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	"sigs.k8s.io/yaml"
 
@@ -115,8 +119,65 @@ type kubeconformResult struct {
 	Msg  string `json:"msg"`
 }
 
+// kubeconform fetches every schema over HTTP with a client that has no
+// timeout of its own (v0.7.0: retryablehttp, RetryMax 2, no
+// http.Client.Timeout), and without -cache it fetches them again for every
+// source in every run -- dozens of requests per gate run to
+// raw.githubusercontent.com for kinds whose schema has not changed. One
+// response that stalls holds the whole process until the deadline, and the
+// gate reports `could not run` on whichever source drew it. Seen on a live
+// repository more than once as `kubeconform did not finish within 3m0s` on a
+// source of two PrometheusRules, on pull requests that did not touch it.
+//
+// So: the downloads are cached on disk for the life of the process, which
+// takes the network out of every run after the first for every schema that
+// resolves, and a run that hits the deadline is tried once more on a fresh
+// process and fresh connections before the gate gives up.
+var (
+	// kubeconformAttemptTimeout bounds one kubeconform process. A var only
+	// so a test can shorten it.
+	kubeconformAttemptTimeout = toolTimeout
+	// kubeconformAttempts is how many processes one source may use. Two: a
+	// stalled connection is the failure being absorbed, and a second stall
+	// in a row is an outage the report should name rather than wait out.
+	kubeconformAttempts = 2
+	// kubeconformCacheDir is where downloaded schemas are kept. Under the
+	// temp dir because that is the one place a read-only root filesystem
+	// still leaves writable (the chart mounts an emptyDir there), and per
+	// process lifetime is the right scope: a schema location is a moving
+	// branch, and a restart picks its changes up.
+	kubeconformCacheDir = filepath.Join(os.TempDir(), "bosun-kubeconform-cache")
+)
+
 func runKubeconform(ctx context.Context, cfg *Config, doc []byte) ([]kubeconformResult, error) {
+	var lastErr error
+	for attempt := 1; attempt <= kubeconformAttempts; attempt++ {
+		out, err := runKubeconformOnce(ctx, cfg, doc)
+		if err == nil {
+			return out, nil
+		}
+		lastErr = err
+		// Only the deadline is retried. An invalid manifest is a result,
+		// and output kubeconform could not produce twice is not a stall.
+		if !errors.Is(err, context.DeadlineExceeded) || ctx.Err() != nil {
+			return nil, err
+		}
+		// A process killed mid-download may have left a truncated schema
+		// in the cache, and kubeconform would read it back as the schema
+		// from then on: a manifest rejected by a file nobody wrote. Start
+		// the cache over rather than trust any of it.
+		_ = os.RemoveAll(kubeconformCacheDir)
+	}
+	return nil, lastErr
+}
+
+func runKubeconformOnce(ctx context.Context, cfg *Config, doc []byte) ([]kubeconformResult, error) {
 	args := []string{"-strict", "-output", "json", "-summary=false"}
+	// Best effort: without a cache directory kubeconform still works, it
+	// only downloads everything again, which is how it ran before this.
+	if err := os.MkdirAll(kubeconformCacheDir, 0o700); err == nil {
+		args = append(args, "-cache", kubeconformCacheDir)
+	}
 	if cfg.Validate.IgnoreMissingSchemas {
 		args = append(args, "-ignore-missing-schemas")
 	}
@@ -133,7 +194,7 @@ func runKubeconform(ctx context.Context, cfg *Config, doc []byte) ([]kubeconform
 	// not: kubeconform exits non-zero when a manifest is invalid, which is a
 	// result rather than an execution failure, so the output is parsed either
 	// way.
-	ctx, cancel := context.WithTimeout(ctx, toolTimeout)
+	ctx, cancel := context.WithTimeout(ctx, kubeconformAttemptTimeout)
 	defer cancel()
 
 	cmd := exec.CommandContext(ctx, "kubeconform", args...)
@@ -141,6 +202,9 @@ func runKubeconform(ctx context.Context, cfg *Config, doc []byte) ([]kubeconform
 	// none of this process's credentials in its environment.
 	cmd.Env = childenv.Environ()
 	cmd.Stdin = bytes.NewReader(doc)
+	// Kill promptly once the deadline passes, even if a grandchild holds the
+	// pipes open.
+	cmd.WaitDelay = 5 * time.Second
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
@@ -150,7 +214,7 @@ func runKubeconform(ctx context.Context, cfg *Config, doc []byte) ([]kubeconform
 	// blame the empty stdout on kubeconform's output format. Say the deadline
 	// expired instead.
 	if err := ctx.Err(); err != nil {
-		return nil, fmt.Errorf("kubeconform did not finish within %s: %w", toolTimeout, err)
+		return nil, fmt.Errorf("kubeconform did not finish within %s: %w", kubeconformAttemptTimeout, err)
 	}
 
 	var parsed struct {
