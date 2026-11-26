@@ -111,6 +111,22 @@ All notable changes to `bosun`. Format follows
 
 ### Fixed
 
+- **A stalled schema download no longer fails the gate.** kubeconform fetches
+  every schema over HTTP with no client timeout, and without `-cache` it
+  fetched them all again for every source in every run. One response that
+  stalled held the process to the 3-minute deadline, and the gate reported
+  `could not run: ... kubeconform did not finish within 3m0s` on whichever
+  source drew it, on pull requests that did not touch that source. Seen more
+  than once on a live install, on a source of two PrometheusRules.
+
+  Downloads are now cached under the temp dir (the chart's `/tmp` emptyDir)
+  for the life of the process, so after the first run only schemas that do
+  not resolve at a location are fetched again. A run that hits the deadline
+  is tried once more on a fresh process; the cache is cleared first, because
+  a process killed mid-download can leave a truncated schema that kubeconform
+  would read back as the schema from then on. Two stalls in a row still fail
+  with the same message. Covered by `gate/validate_retry_test.go`.
+
 - **Charts render against the cluster they deploy to, not helm's defaults.**
   `helm template` was run with no `--kube-version` and no `--api-versions`, so
   every `.Capabilities` check in a chart answered for whichever helm was in

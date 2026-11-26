@@ -204,7 +204,7 @@ cosign verify \
 cosign verify \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
   --certificate-identity-regexp '^https://github\.com/IntegratnIO/bosun/\.github/workflows/chart\.yaml@' \
-  ghcr.io/integratnio/charts/bosun:0.39.2
+  ghcr.io/integratnio/charts/bosun:0.39.3
 ```
 
 The identity is a pattern rather than a literal because the ref is part of it:
